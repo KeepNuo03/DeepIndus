@@ -1,0 +1,77 @@
+-- V5: 部门管理 + 用户表扩展字段 + 操作日志表
+-- 【已注释】此迁移脚本已禁用，请通过手动执行 SQL 文件初始化数据
+-- 手动执行文件路径: docsFromFrontend/INIT_USER_ROLE_DEPT_DATA.sql
+
+-- =====================================================
+-- 以下 SQL 已禁用，不会被执行
+-- =====================================================
+
+-- -- 1. 创建部门表
+-- CREATE TABLE IF NOT EXISTS departments (
+--     id BIGINT PRIMARY KEY AUTO_INCREMENT,
+--     name VARCHAR(128) NOT NULL COMMENT '部门名称',
+--     code VARCHAR(64) NOT NULL UNIQUE COMMENT '部门编码',
+--     description VARCHAR(255) COMMENT '部门描述',
+--     parent_id BIGINT COMMENT '上级部门ID（支持多级部门）',
+--     manager_id BIGINT COMMENT '部门负责人ID（关联users表）',
+--     sort_order INT DEFAULT 0 COMMENT '排序号',
+--     status VARCHAR(16) NOT NULL DEFAULT 'active' COMMENT '状态：active/inactive',
+--     created_at DATETIME NOT NULL,
+--     updated_at DATETIME NOT NULL,
+--     CONSTRAINT fk_dept_parent FOREIGN KEY (parent_id) REFERENCES departments(id) ON DELETE SET NULL
+-- ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='部门表';
+
+-- -- 2. 用户表扩展字段
+-- ALTER TABLE users
+-- ADD COLUMN IF NOT EXISTS department_id BIGINT COMMENT '所属部门ID',
+-- ADD COLUMN IF NOT EXISTS phone VARCHAR(20) COMMENT '手机号',
+-- ADD COLUMN IF NOT EXISTS last_login_at DATETIME COMMENT '最后登录时间',
+-- ADD COLUMN IF NOT EXISTS last_login_ip VARCHAR(64) COMMENT '最后登录IP',
+-- ADD COLUMN IF NOT EXISTS login_count INT DEFAULT 0 COMMENT '登录次数',
+-- ADD COLUMN IF NOT EXISTS online_status TINYINT DEFAULT 0 COMMENT '在线状态：0离线 1在线',
+-- ADD COLUMN IF NOT EXISTS employee_no VARCHAR(64) COMMENT '员工编号',
+-- ADD COLUMN IF NOT EXISTS position VARCHAR(128) COMMENT '职位';
+
+-- -- 添加外键约束（如果不存在）
+-- ALTER TABLE users ADD CONSTRAINT fk_user_department
+-- FOREIGN KEY (department_id) REFERENCES departments(id) ON DELETE SET NULL;
+
+-- -- 3. 创建操作日志表
+-- CREATE TABLE IF NOT EXISTS operation_logs (
+--     id BIGINT PRIMARY KEY AUTO_INCREMENT,
+--     user_id BIGINT COMMENT '操作用户ID',
+--     user_name VARCHAR(64) COMMENT '操作用户名',
+--     operation_type VARCHAR(32) NOT NULL COMMENT '操作类型：CREATE/UPDATE/DELETE/LOGIN/LOGOUT/QUERY',
+--     module VARCHAR(64) NOT NULL COMMENT '操作模块：user/role/product/detection等',
+--     description VARCHAR(512) COMMENT '操作描述',
+--     request_method VARCHAR(16) COMMENT '请求方法：GET/POST/PUT/DELETE',
+--     request_url VARCHAR(255) COMMENT '请求URL',
+--     request_params TEXT COMMENT '请求参数（JSON格式）',
+--     response_status INT COMMENT '响应状态码',
+--     ip_address VARCHAR(64) COMMENT '操作IP地址',
+--     user_agent VARCHAR(255) COMMENT '浏览器User-Agent',
+--     duration_ms INT COMMENT '执行耗时（毫秒）',
+--     status VARCHAR(16) DEFAULT 'success' COMMENT '操作状态：success/fail',
+--     error_message TEXT COMMENT '错误信息',
+--     created_at DATETIME NOT NULL,
+--     INDEX idx_operation_user (user_id),
+--     INDEX idx_operation_module (module),
+--     INDEX idx_operation_type (operation_type),
+--     INDEX idx_operation_created (created_at)
+-- ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='操作日志表';
+
+-- -- 4. 添加索引优化
+-- CREATE INDEX IF NOT EXISTS idx_departments_parent ON departments(parent_id);
+-- CREATE INDEX IF NOT EXISTS idx_departments_status ON departments(status);
+-- CREATE INDEX IF NOT EXISTS idx_departments_code ON departments(code);
+-- CREATE INDEX IF NOT EXISTS idx_users_department ON users(department_id);
+-- CREATE INDEX IF NOT EXISTS idx_users_status ON users(status);
+-- CREATE INDEX IF NOT EXISTS idx_users_phone ON users(phone);
+-- CREATE INDEX IF NOT EXISTS idx_users_employee_no ON users(employee_no);
+
+-- =====================================================
+-- 替代方案：请在 MySQL 终端手动执行以下命令
+-- =====================================================
+-- source c:/induscore/docsFromFrontend/INIT_USER_ROLE_DEPT_DATA.sql
+-- 或
+-- mysql -u root -p induscore < c:/induscore/docsFromFrontend/INIT_USER_ROLE_DEPT_DATA.sql

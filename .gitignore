@@ -1,0 +1,76 @@
+# ---- OS / Editor ----
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+
+# ---- Logs ----
+*.log
+logs/
+
+# ---- Secrets / Environment ----
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.jks
+*.keystore
+secrets/
+
+# ---- Node / Vue ----
+node_modules/
+dist/
+.nuxt/
+.output/
+.cache/
+.eslintcache
+*.tsbuildinfo
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ---- Java / Spring / Kotlin ----
+target/
+build/
+out/
+*.class
+
+# ---- Android / Gradle ----
+**/.gradle/
+**/local.properties
+**/captures/
+**/build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+**/release/
+**/debug/
+**/.cxx/
+*.apk
+*.aab
+
+# ---- Python / YOLO ----
+__pycache__/
+*.pyc
+.venv/
+venv/
+**/venv/
+**/.venv/
+yolo-service/runs/
+yolo-service/weights/
+yolo-service/models/
+*.pt
+*.onnx
+*.engine
+*.trt
+*.tflite
+*.torchscript
+
+# ---- Optional local data ----
+database/*.dump
+database/*.bak
