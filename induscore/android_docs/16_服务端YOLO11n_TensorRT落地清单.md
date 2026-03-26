@@ -99,3 +99,17 @@
 
 ## 推荐实践
 - 生产落地顺序：`FP32基线 -> FP16上线 -> INT8优化`。
+
+## 执行进度（2026-03-26）
+
+- 已完成服务端推理加速第一阶段代码改造（MVP）：
+  - `yolo-service/main.py` 新增后端切换：`YOLO_BACKEND=auto|pytorch|onnx|tensorrt`
+  - `auto` 策略优先级：`TensorRT engine -> ONNX -> PyTorch`
+  - 新增 FP16 开关、预热（warmup）、回退开关与推理参数配置
+  - 保持原有检测 API 路径不变（兼容现有上层业务调用）
+- 已补齐运行材料：
+  - `yolo-service/.env.example`
+  - `yolo-service/requirements.txt`
+  - `yolo-service/README.md`
+- 已完成语法级验证：
+  - `python -m py_compile yolo-service/main.py` 通过
